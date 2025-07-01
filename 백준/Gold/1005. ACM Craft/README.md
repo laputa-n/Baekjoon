@@ -1,4 +1,6 @@
-# [Gold III] ACM Craft - 1005 위상정렬
+# [Gold III] ACM Craft - 1005
+
+### #위상정렬
 
 [문제 링크](https://www.acmicpc.net/problem/1005) 
 
