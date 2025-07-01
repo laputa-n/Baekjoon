@@ -1,5 +1,7 @@
 # [Gold II] 문제집 - 1766 
 
+### #위상정렬
+
 [문제 링크](https://www.acmicpc.net/problem/1766) 
 
 ### 성능 요약
