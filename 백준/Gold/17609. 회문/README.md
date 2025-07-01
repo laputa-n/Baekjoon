@@ -1,5 +1,7 @@
 # [Gold V] 회문 - 17609 
 
+### #two-pointer
+
 [문제 링크](https://www.acmicpc.net/problem/17609) 
 
 ### 성능 요약
