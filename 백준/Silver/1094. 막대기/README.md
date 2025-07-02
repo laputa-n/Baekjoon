@@ -1,5 +1,7 @@
 # [Silver V] 막대기 - 1094 
 
+### 비트마스크
+
 [문제 링크](https://www.acmicpc.net/problem/1094) 
 
 ### 성능 요약
