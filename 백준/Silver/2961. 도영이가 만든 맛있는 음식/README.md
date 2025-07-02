@@ -1,6 +1,6 @@
 # [Silver II] 도영이가 만든 맛있는 음식 - 2961 
 
-### 비트마스크
+### #비트마스크
 
 [문제 링크](https://www.acmicpc.net/problem/2961) 
 
