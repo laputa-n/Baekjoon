@@ -1,6 +1,6 @@
 # [Silver V] 집합 - 11723 
 
-### 비트마스크
+### #비트마스크
 
 [문제 링크](https://www.acmicpc.net/problem/11723) 
 
