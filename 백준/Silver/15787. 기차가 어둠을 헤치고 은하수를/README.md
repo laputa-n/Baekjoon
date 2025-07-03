@@ -1,5 +1,7 @@
 # [Silver II] 기차가 어둠을 헤치고 은하수를 - 15787 
 
+### #비트마스크
+
 [문제 링크](https://www.acmicpc.net/problem/15787) 
 
 ### 성능 요약
