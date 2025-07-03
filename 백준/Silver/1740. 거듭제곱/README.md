@@ -1,5 +1,7 @@
 # [Silver III] 거듭제곱 - 1740 
 
+### #비트마스크
+
 [문제 링크](https://www.acmicpc.net/problem/1740) 
 
 ### 성능 요약
