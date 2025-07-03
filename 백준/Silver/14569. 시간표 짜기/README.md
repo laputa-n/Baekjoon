@@ -1,5 +1,7 @@
 # [Silver II] 시간표 짜기 - 14569 
 
+### #비트마스크
+
 [문제 링크](https://www.acmicpc.net/problem/14569) 
 
 ### 성능 요약
