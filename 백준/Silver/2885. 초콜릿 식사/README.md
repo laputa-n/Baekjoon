@@ -1,5 +1,7 @@
 # [Silver II] 초콜릿 식사 - 2885 
 
+### #비트마스크
+
 [문제 링크](https://www.acmicpc.net/problem/2885) 
 
 ### 성능 요약
