@@ -1,5 +1,7 @@
 # [Silver II] 부분수열의 합 - 1182 
 
+### #백트래킹
+
 [문제 링크](https://www.acmicpc.net/problem/1182) 
 
 ### 성능 요약
