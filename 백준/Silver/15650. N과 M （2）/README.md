@@ -1,5 +1,7 @@
 # [Silver III] N과 M (2) - 15650 
 
+### #백트래킹
+
 [문제 링크](https://www.acmicpc.net/problem/15650) 
 
 ### 성능 요약
