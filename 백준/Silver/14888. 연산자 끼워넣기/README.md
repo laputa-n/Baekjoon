@@ -1,5 +1,7 @@
 # [Silver I] 연산자 끼워넣기 - 14888 
 
+### #백트래킹
+
 [문제 링크](https://www.acmicpc.net/problem/14888) 
 
 ### 성능 요약
