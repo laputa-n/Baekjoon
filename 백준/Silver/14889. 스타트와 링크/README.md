@@ -1,4 +1,6 @@
-# [Silver I] 스타트와 링크 - 14889 
+# [Silver I] 스타트와 링크 - 14889
+
+### #백트래킹
 
 [문제 링크](https://www.acmicpc.net/problem/14889) 
 
