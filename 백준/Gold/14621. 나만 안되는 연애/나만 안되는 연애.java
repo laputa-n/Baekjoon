@@ -2,32 +2,15 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static class Edge implements Comparable<Edge>{
-        int from,start,dist;
-        public Edge(int from, int start, int dist) {
-            this.from = from;
-            this.start = start;
+    static class Node implements Comparable<Node>{
+        int to,dist;
+        Node(int to, int dist){
+            this.to = to;
             this.dist = dist;
         }
-        public int compareTo(Edge o) {
+        @Override
+        public int compareTo(Node o) {
             return dist - o.dist;
-        }
-    }
-    static int[] parent;
-    static int find(int x){
-        if(x == parent[x]) return x;
-        parent[x] = find(parent[x]);
-        return parent[x];
-    }
-    static void union(int x,int y){
-        int rootX = find(x);
-        int rootY = find(y);
-        if(rootX != rootY){
-            if(rootX < rootY){
-                parent[rootY] = rootX;
-            } else {
-                parent[rootX] = rootY;
-            }
         }
     }
     public static void main(String[] args) throws IOException {
@@ -37,35 +20,44 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
         char[] gender = new char[N+1];
-        parent = new int[N+1];
-        for(int i = 0; i < N+1; i++) {
-            parent[i] = i;
-        }
         String s = br.readLine();
         for(int i = 1; i <= N; i++) {
             gender[i] = s.charAt(2*(i-1));
         }
-        PriorityQueue<Edge> pq = new PriorityQueue<>();
-        for(int i = 0; i < M; i++) {
+        ArrayList<Node> [] al = new ArrayList[N+1];
+        for(int i = 1; i <= N; i++) {
+            al[i] = new ArrayList<>();
+        }
+        for(int i = 0; i < M; i++){
             st = new StringTokenizer(br.readLine(), " ");
             int u = Integer.parseInt(st.nextToken());
             int v = Integer.parseInt(st.nextToken());
             int d = Integer.parseInt(st.nextToken());
-            if(gender[u] == gender[v]) { continue;}
-            pq.add(new Edge(u, v, d));
+            if(gender[u] == gender[v]){ continue;}
+            al[u].add(new Node(v,d));
+            al[v].add(new Node(u,d));
         }
+        boolean[] visited = new boolean[N+1];
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        pq.add(new Node(1,0));
         int totalDist = 0;
-        while(!pq.isEmpty()) {
-            Edge e = pq.poll();
-            if(find(e.from) != find(e.start)){
-                union(e.from, e.start);
-                totalDist += e.dist;
+        while(!pq.isEmpty()){
+            Node cur = pq.poll();
+            if(visited[cur.to]){
+                continue;
+            }
+            visited[cur.to] = true;
+            totalDist += cur.dist;
+            for(Node n: al[cur.to]){
+                if(!visited[n.to]){
+                    pq.add(n);
+
+                }
             }
         }
         boolean flag = false;
-        int p = find(1);
-        for(int i = 2; i <= N; i++) {
-            if (p != find(i)) {
+        for(int i = 1; i <= N; i++) {
+            if(!visited[i]){
                 flag = true;
                 break;
             }
