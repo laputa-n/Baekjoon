@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 public class Main
 {
-    static final int INF = 1000000000;
+    static final int INF = 1000000;
     public static void main(String args[]) throws Exception
     {
 //        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
