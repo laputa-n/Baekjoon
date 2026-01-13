@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 14336 KB, 시간: 108 ms
+메모리: 91248 KB, 시간: 876 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2026년 1월 13일 13:56:20
+2026년 1월 13일 14:26:38
 
 ### 문제 설명
 
@@ -20,7 +20,7 @@
 
 <p>예를 들어 <그림 1>에서 1번 통나무에서 2번 통나무로 점선을 따라 개구리가 점프하는 것이 가능하다. 1번 통나무에서 2번 통나무로 점프한 후 다시 3번 통나무로 점프하면 1번 통나무에서 3번 통나무로 이동하는 것이 가능하다. (통나무 위에서 걸어서 움직이는 것은 언제든 가능하다.)</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 521px; height: 186px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/98a76e73-0187-43bb-90f9-435f8055e74f/-/preview/" style="width: 521px; height: 186px;"></p>
 
 <p style="text-align: center;"><그림 1></p>
 
