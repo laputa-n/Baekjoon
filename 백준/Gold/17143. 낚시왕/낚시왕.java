@@ -22,6 +22,11 @@ public class Main {
             int s = Integer.parseInt(input[2]);
             int d = Integer.parseInt(input[3]);
             int z = Integer.parseInt(input[4]);
+            if(d == 1 || d == 2){
+                s %= (2*(R-1));
+            } else {
+                s %= (2*(C-1));
+            }
             idxToShark.put(i, new Shark(r, c, s, d, z));
         }
         int loc = 0;
@@ -47,13 +52,7 @@ public class Main {
                 Shark s = idxToShark.get(i);
                 int curDir = s.direction;
 
-                int sp = s.speed;
-                if(curDir == 1 || curDir == 2){
-                    if(R>1) sp %= ((R-1)*2);
-                } else {
-                    if(C>1) sp %= ((C-1)*2);
-                }
-                for(int j = 0; j<sp; j++){
+                for(int j = 0; j<s.speed; j++){
                     if(curDir == 1){
                         if(s.row == 1)
                             curDir = 2;
