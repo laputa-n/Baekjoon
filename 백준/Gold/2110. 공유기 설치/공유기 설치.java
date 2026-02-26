@@ -1,49 +1,47 @@
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int N;
-    static int[] house;
+    static int[] loc;
+    static int N,C;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
-        int C = Integer.parseInt(st.nextToken());
-        house = new int[N];
-        for (int i = 0; i < N; i++) {
-            house[i] = Integer.parseInt(br.readLine());
+        C = Integer.parseInt(st.nextToken());
+        loc = new int[N];
+        for(int i = 0; i < N; i++) {
+            loc[i] = Integer.parseInt(br.readLine());
         }
-        Arrays.sort(house);
-        int lo  = 1;
-        int hi = house[N-1] - house[0] + 1;
-        while(lo < hi){
-            int mid = (lo + hi)/2;
-
-            if(caninstall(mid) < C){
-                hi = mid;
+        Arrays.sort(loc);
+        int start = 1; int end = loc[N-1] - loc[0] + 1;
+        while(start<end){
+            int mid = (start+end)/2;
+            int cnt = APCount(mid);
+            if(cnt>=C){
+                start = mid+1;
             } else {
-                lo = mid + 1;
+                end = mid;
             }
         }
-        bw.write(String.valueOf(lo - 1));
+        bw.write(String.valueOf(end-1));
+
         bw.flush();
         bw.close();
         br.close();
     }
-    static int caninstall(int d){
+    static int APCount(int d){
         int cnt = 1;
-        int recentInstall = house[0];
-        for (int i = 1; i < N; i++) {
-            int c = house[i];
-            if(c - recentInstall >= d){
-                recentInstall = c;
+        int lastPoint = loc[0];
+        for(int i = 1; i<N; i++){
+            if(loc[i] - lastPoint>=d){
                 cnt++;
+                lastPoint = loc[i];
             }
         }
         return cnt;
     }
+
 }
-
-
-
