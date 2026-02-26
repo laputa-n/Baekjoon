@@ -8,35 +8,37 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        ArrayList<Integer> [] graph = new ArrayList[N+1];
-        for (int i = 0; i < N+1; i++) {
+        List<Integer>[] graph = new List[N+1];
+        for(int i = 0; i<=N; i++){
             graph[i] = new ArrayList<>();
         }
-        int[] edgeCount = new int[N+1];
-        Arrays.fill(edgeCount, 0);
-        for (int i = 0; i < M; i++) {
+        int[] indegree = new int[N+1];
+        Arrays.fill(indegree,0);
+        while(M-->0){
             st = new StringTokenizer(br.readLine());
-            int u = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
-            graph[u].add(v);
-            edgeCount[v]++;
+            int A = Integer.parseInt(st.nextToken());
+            int B = Integer.parseInt(st.nextToken());
+            graph[A].add(B);
+            indegree[B]++;
         }
-        Queue<Integer> queue = new LinkedList<>();
-        for(int i = 1; i<N+1; i++) {
-            if(edgeCount[i] == 0)
-                queue.add(i);
+        Queue<Integer> q = new LinkedList<>();
+        for(int i = 1; i<=N; i++){
+            if(indegree[i] == 0){
+                q.add(i);
+            }
         }
-        while(!queue.isEmpty()) {
-            int u = queue.poll();
-            bw.write(String.valueOf(u) + " ");
-            List<Integer> list = graph[u];
-            for(int v : list) {
-                edgeCount[v]--;
-                if(edgeCount[v] == 0){
-                   queue.add(v);
+        StringBuilder sb = new StringBuilder();
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            sb.append(cur).append(" ");
+            for(int n:graph[cur]){
+                indegree[n]--;
+                if(indegree[n] == 0){
+                    q.add(n);
                 }
             }
         }
+        bw.write(sb.toString());
         bw.flush();
         bw.close();
         br.close();
