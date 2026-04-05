@@ -1,25 +1,23 @@
 import java.util.*;
 class Solution {
+    static boolean[] visited;
     public static int solution(int n, int[][] computers){
+        visited = new boolean[n];
         int cnt = 0;
-        boolean[] visited = new boolean[n];
         for(int i = 0; i<n; i++){
             if(!visited[i]){
-                visited[i] = true;
                 cnt++;
-                ArrayDeque<Integer> q = new ArrayDeque<Integer>();
-                q.add(i);
-                while(!q.isEmpty()){
-                    int cur = q.poll();
-                    for(int j = 0; j<n; j++){
-                        if(computers[cur][j] == 1 && !visited[j]){
-                            q.add(j);
-                            visited[j] = true;
-                        }
-                    }
-                }
+                DFS(i, computers, n);
             }
         }
         return cnt;
+    }
+    static void DFS(int tar, int[][] computers, int n){
+        visited[tar] = true;
+        for(int i = 0; i<n; i++){
+            if(computers[tar][i] == 1 && !visited[i]){
+                DFS(i, computers, n);
+            }
+        }
     }
 }
