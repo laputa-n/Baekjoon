@@ -1,36 +1,65 @@
 import java.util.*;
 
 class Solution {
-    public int[] solution(String[] genres, int[] plays) {
-        HashMap<String, Integer> cnt = new HashMap<>();
-        HashMap<String,HashMap<Integer,Integer>> genreNumPlay = new HashMap<>();
-        for(int i = 0; i<genres.length; i++) {
-            if(!cnt.containsKey(genres[i])){
-                HashMap<Integer,Integer> numPlay = new HashMap<>();
-                cnt.put(genres[i],plays[i]);
-                numPlay.put(i,plays[i]);
-                genreNumPlay.put(genres[i],numPlay);
-            } else {
-                cnt.put(genres[i],cnt.get(genres[i]) + plays[i]);
-                genreNumPlay.get(genres[i]).put(i,plays[i]);
+    public int[] solution(String[] genres, int[] plays){
+        int N = genres.length;
+        ArrayList<Music> list = new ArrayList<>();
+        for(int i = 0; i<N; i++){
+            list.add(new Music(i,plays[i],genres[i]));
+        }
+        HashMap<String, Integer> genreToPlays = new HashMap<>();
+        HashMap<String, PriorityQueue<Music>> genreToMusics = new HashMap<>();
+
+        for(Music m:list){
+            genreToPlays.putIfAbsent(m.genre,0);
+            genreToPlays.put(m.genre, genreToPlays.get(m.genre) + m.plays);
+
+            genreToMusics.putIfAbsent(m.genre, new PriorityQueue<Music>());
+            genreToMusics.get(m.genre).add(m);
+        }
+
+        PriorityQueue<Genre> pq = new PriorityQueue<>((g1,g2) -> g2.totalPlays - g1.totalPlays);
+        for(String s:genreToPlays.keySet()){
+            pq.add(new Genre(s,genreToPlays.get(s)));
+        }
+        List<Integer> ans = new ArrayList<Integer>();
+        while(!pq.isEmpty()){
+            Genre g = pq.poll();
+            PriorityQueue<Music> p = genreToMusics.get(g.name);
+            ans.add(p.poll().id);
+            if(!p.isEmpty()) ans.add(p.poll().id);
+        }
+
+        int[] re = new int[ans.size()];
+        for(int i = 0; i<ans.size(); i++){
+            re[i] = ans.get(i);
+        }
+        
+        return re;
+    }
+    static class Genre {
+        String name;
+        int totalPlays;
+        public Genre(String name, int totalPlays){
+            this.name = name;
+            this.totalPlays = totalPlays;
+        }
+    }
+    static class Music implements Comparable<Music>{
+        int id,plays;
+        String genre;
+        public Music(int id, int plays, String genre){
+            this.id = id;
+            this.plays = plays;
+            this.genre = genre;
+        }
+
+        @Override
+        public int compareTo(Music o){
+            if(this.plays == o.plays){
+                return Integer.compare(this.id, o.id);
             }
+            return Integer.compare(o.plays, this.plays);
         }
-
-        List<String> keySet = new ArrayList<>(cnt.keySet());
-
-        keySet.sort((s1, s2) -> Integer.compare(cnt.get(s2), cnt.get(s1)));
-
-        ArrayList<Integer> list = new ArrayList<>();
-        for(String key: keySet){
-            HashMap<Integer,Integer> numPlay = genreNumPlay.get(key);
-            List<Integer> musicNum = new ArrayList<>(numPlay.keySet());
-
-            musicNum.sort((s1, s2) -> Integer.compare(numPlay.get(s2), numPlay.get(s1)));
-            list.add(musicNum.get(0));
-            musicNum.remove(0);
-            if(!musicNum.isEmpty())
-                list.add(musicNum.get(0));
-        }
-        return list.stream().mapToInt(i -> i).toArray();
     }
 }
