@@ -1,42 +1,45 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        List<Integer>[] graph = new List[N+1];
+        int[] indegrees = new int[N+1];
+        List<Integer>[] next = new ArrayList[N+1];
         for(int i = 0; i<=N; i++){
-            graph[i] = new ArrayList<>();
+            next[i] = new ArrayList<Integer>();
         }
-        int[] indegree = new int[N+1];
-        Arrays.fill(indegree,0);
-        while(M-->0){
+        for(int i = 0; i<M; i++){
             st = new StringTokenizer(br.readLine());
             int A = Integer.parseInt(st.nextToken());
             int B = Integer.parseInt(st.nextToken());
-            graph[A].add(B);
-            indegree[B]++;
+            next[A].add(B);
+            indegrees[B]++;
         }
         Queue<Integer> q = new LinkedList<>();
         for(int i = 1; i<=N; i++){
-            if(indegree[i] == 0){
+            if(indegrees[i] == 0){
                 q.add(i);
             }
         }
-        StringBuilder sb = new StringBuilder();
+        ArrayList<Integer> answer = new ArrayList<Integer>();
         while(!q.isEmpty()){
             int cur = q.poll();
-            sb.append(cur).append(" ");
-            for(int n:graph[cur]){
-                indegree[n]--;
-                if(indegree[n] == 0){
-                    q.add(n);
+            answer.add(cur);
+            for(int adj:next[cur]){
+                indegrees[adj]--;
+                if(indegrees[adj] == 0){
+                    q.add(adj);
                 }
             }
+        }
+        StringBuilder sb = new StringBuilder();
+        for(int a:answer){
+            sb.append(a).append(" ");
         }
         bw.write(sb.toString());
         bw.flush();
