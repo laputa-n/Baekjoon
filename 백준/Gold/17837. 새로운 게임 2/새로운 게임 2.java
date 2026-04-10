@@ -77,30 +77,16 @@ public class Main{
                             break;
                         }
                     }
-                //하얀색이면
-                } else if(map[nextRow][nextCol] == 0){
-                    int curIdx = matrix[curRow][curCol].indexOf(i);
-                    int size = matrix[curRow][curCol].size();
-                    List<Integer> tar = new ArrayList<>(matrix[curRow][curCol].subList(curIdx,size));
-                    matrix[curRow][curCol].subList(curIdx,size).clear();
-                    for(int t:tar){
-                        matrix[nextRow][nextCol].add(t);
-                        horse[t][0] = nextRow;
-                        horse[t][1] = nextCol;
-                    }
-                    if(matrix[nextRow][nextCol].size()>=4){
-                        over4 = true;
-                        break;
-                    }
-                } else
-                //빨간색이면
+                }
+                else
+                //하양,빨간색이면
                 {
                     int curIdx = matrix[curRow][curCol].indexOf(i);
                     int size = matrix[curRow][curCol].size();
                     List<Integer> tar = new ArrayList<>(matrix[curRow][curCol].subList(curIdx,size));
                     matrix[curRow][curCol].subList(curIdx,size).clear();
 
-                    Collections.reverse(tar);
+                    if(map[nextRow][nextCol] == 1) Collections.reverse(tar);
                     for(int t:tar){
                         matrix[nextRow][nextCol].add(t);
                         horse[t][0] = nextRow;
