@@ -2,16 +2,11 @@ import java.util.*;
 
 public class Solution {
     public int[] solution(int []arr) {
-        ArrayDeque<Integer> deque = new ArrayDeque<>();
-        for (int j : arr) {
-            if (deque.isEmpty()) {
-                deque.push(j);
-                continue;
-            }
-            if (deque.peekLast() != j) {
-                deque.addLast(j);
-            }
+        ArrayDeque<Integer> q = new ArrayDeque<>();
+        for(int t: arr){
+            if(!q.isEmpty() && q.getLast() == t) continue;
+            q.offer(t);
         }
-        return deque.stream().mapToInt(i -> i).toArray();
+        return q.stream().mapToInt(i->i).toArray();
     }
 }
