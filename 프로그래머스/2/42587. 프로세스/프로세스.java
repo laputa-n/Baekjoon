@@ -2,37 +2,24 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+        for(int p:priorities){
+            pq.add(p);
+        }
         int ans = 0;
-        ArrayDeque<Process> queue = new ArrayDeque<>();
-        for (int i = 0; i < priorities.length; i++) {
-            queue.add(new Process(i, priorities[i]));
-        }
-        while(true){
-            ArrayDeque<Process> temp = new ArrayDeque<>();
-            Process p = queue.poll();
-            boolean flag = false;
-            while(!queue.isEmpty()){
-                Process p1 = queue.poll();
-                if(p.priority<p1.priority){
-                    flag = true;
+        while(!pq.isEmpty()){
+            for(int i = 0; i<priorities.length; i++){
+                if(pq.peek() == priorities[i]){
+                    pq.poll();
+                    ans++;
+                    if(i == location){
+                        return ans;
+                    }
                 }
-                temp.offer(p1);
             }
-            if(flag){
-                temp.offer(p);
-            } else {
-                ans++;
-                if(p.idx == location)
-                    return ans;
-            }
-            queue= temp;
         }
+        
+        return ans;
     }
-    static class Process{
-        int idx, priority;
-        public Process(int idx, int priority) {
-            this.idx = idx;
-            this.priority = priority;
-        }
-    }
+    
 }
