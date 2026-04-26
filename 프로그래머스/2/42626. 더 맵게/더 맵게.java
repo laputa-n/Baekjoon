@@ -3,31 +3,26 @@ import java.util.*;
 class Solution {
     public int solution(int[] scoville, int K) {
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for(int sc:scoville){
-            pq.add(sc);
+        for(int s: scoville){
+            pq.add(s);
         }
-        boolean possible = true;
         int cnt = 0;
+        boolean flag = false;
         while(true){
-            if(pq.isEmpty()){
-                possible = false;
+            if(pq.peek() >= K){
+                flag = true;
                 break;
             }
-            int cur = pq.poll();
-            if(cur >= K) break;
-            if(pq.isEmpty()){
-                possible = false;
-                break;
-            }
-            int next = pq.poll();
-            int mix = cur + next*2;
-            pq.add(mix);
+            
+            if(pq.size() < 2) break;
+            
+            int x = pq.poll();
+            int y = pq.poll();
+            pq.add(x + y*2);
             cnt++;
         }
-        if(!possible){
-            return -1;
-        }
-        return cnt;
+        
+        return flag?cnt:-1;
 
     }
 }
