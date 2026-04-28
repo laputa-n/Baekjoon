@@ -1,21 +1,33 @@
 class Solution {
     static boolean[] visited;
-    static int maxVisited = 0;
+    static int max = 0;
+    static boolean flag = false;
     public int solution(int k, int[][] dungeons) {
+        //k: 현재 피로도
+        //dungeons[i][0]: i던전 최소 필요 피로도
+        //dungeons[i][1]: i던전 소모 피로도
         visited = new boolean[dungeons.length];
-        DFS(k,dungeons,0);
-        return maxVisited;
+        
+        //현재 피로도, 개수, 던전 정보
+        DFS(k,0, dungeons);
+        
+        return max;
     }
-    static void DFS(int tired, int[][] dungeons,int visitCnt){
-        if(visited.length == visitCnt || tired == 0)
-            return;
-        for(int i = 0; i<visited.length; i++){
-            if(!visited[i] && tired >= dungeons[i][0]){
+    static void DFS(int tired, int depth, int[][] d){
+        if(flag) return;
+        for(int i = 0; i<d.length; i++){
+            if(!visited[i] && tired >= d[i][0]){
                 visited[i] = true;
-                maxVisited = Math.max(maxVisited, visitCnt+1);
-                DFS(tired - dungeons[i][1],dungeons,visitCnt+1);
+                max = Math.max(max,depth+1);
+                if(depth+1 == d.length){
+                    flag = true;
+                    return;
+                }
+                DFS(tired - d[i][1], depth+1, d);
                 visited[i] = false;
             }
         }
+        
     }
+    
 }
