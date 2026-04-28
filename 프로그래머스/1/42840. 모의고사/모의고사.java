@@ -2,26 +2,46 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] answers) {
-        int[] person1Answers = new int[]{1,2,3,4,5};
-        int[] person2Answers = new int[]{2,1,2,3,2,4,2,5};
-        int[] person3Answers = new int[]{3,3,1,1,2,2,4,4,5,5};
-        int person1length = person1Answers.length;
-        int person2length = person2Answers.length;
-        int person3length = person3Answers.length;
-        int person1Cnt = 0;
-        int person2Cnt = 0;
-        int person3Cnt = 0;
-        for (int i = 0; i < answers.length; i++) {
-            if(answers[i] == person1Answers[i%person1length]) person1Cnt++;
-            if(answers[i] == person2Answers[i%person2length]) person2Cnt++;
-            if(answers[i] == person3Answers[i%person3length]) person3Cnt++;
+        int[] cnt = new int[3];
+        
+        for(int i = 0; i<answers.length; i++){
+            if(solve1(i) == answers[i]) cnt[0]++;
+            if(solve2(i) == answers[i]) cnt[1]++;
+            if(solve3(i) == answers[i]) cnt[2]++;
         }
-        int maxCnt = Math.max(Math.max(person1Cnt,person2Cnt),person3Cnt);
-        List<Integer> winningPersonNum = new ArrayList<>();
-        if(maxCnt == person1Cnt) winningPersonNum.add(1);
-        if(maxCnt == person2Cnt) winningPersonNum.add(2);
-        if(maxCnt == person3Cnt) winningPersonNum.add(3);
-
-        return winningPersonNum.stream().mapToInt(Integer::intValue).toArray();
+        
+        int max = 0;
+        for(int c: cnt) max = Math.max(max,c);
+        
+        List<Integer> result = new ArrayList<>();
+        for(int i = 0; i<3; i++){
+            if(max == cnt[i]) result.add(i+1);
+        }
+        
+        return result.stream().mapToInt(i->i).toArray();
+    }
+    
+    static int solve1(int i){
+        return i%5 + 1;
+    }
+    
+    static int solve2(int i){
+        if(i%2 == 0) return 2;
+        
+        int t = i%8;
+        if(t == 1) return 1;
+        
+        return 3 + (t-3)/2;
+    }
+    
+    static int solve3(int i){
+        return switch(i % 10){
+            case 0, 1 -> 3;
+            case 2, 3 -> 1;
+            case 4, 5 -> 2;
+            case 6, 7 -> 4;
+            case 8, 9 -> 5;
+          default -> -1;
+        };
     }
 }
