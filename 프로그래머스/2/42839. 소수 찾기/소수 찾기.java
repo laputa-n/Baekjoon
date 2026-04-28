@@ -2,36 +2,53 @@ import java.util.*;
 class Solution {
     static Set<Integer> set = new HashSet<>();
     static boolean[] checked;
-    static int max = Integer.MIN_VALUE;
+    static int max = 0;
+    static boolean[] isPrime;
     public int solution(String numbers) {
-        int answer = 0;
         checked = new boolean[numbers.length()];
-        DFS("0",numbers);
-        boolean[] isPrime = new boolean[max+1];
+        for(int i = 0; i<numbers.length(); i++){
+            DFS(i,"",numbers,0);
+        }
+        
+        isPrime = new boolean[max+1];
         Arrays.fill(isPrime, true);
         isPrime[0] = false;
         isPrime[1] = false;
-        for(int i = 2; i<=Math.sqrt(max); i++){
-            if(!isPrime[i]) continue;
-            for(int j = i*i; j<=max; j+=i){
-                isPrime[j] = false;
+        for(int i = 2; i*i<=max; i++){
+            if(isPrime[i]){
+                for(int j = i*i; j<=max; j+=i){
+                    isPrime[j] = false;
+                }
             }
         }
+        
+        int cnt = 0;
         for(int i:set){
-            if(isPrime[i]) answer++;
+            if(isPrime[i]) cnt++;
         }
-        return answer;
+        
+        return cnt;
+        
     }
-    static void DFS(String s, String numbers){
-        for(int i = 0; i < checked.length; i++){
+    
+    static void DFS(int target, String s, String numbers, int cnt){
+        checked[target] = true;
+        String added = s + String.valueOf(numbers.charAt(target));
+        
+        set.add(Integer.parseInt(added));
+        max = Math.max(max, Integer.parseInt(added));
+        
+        if(cnt + 1 == numbers.length()){
+            checked[target] = false;
+            return;
+        }
+        
+        for(int i = 0; i<numbers.length(); i++){
             if(!checked[i]){
-              checked[i] = true;
-              int a = Integer.parseInt(s+numbers.charAt(i));
-              set.add(a);
-              max = Math.max(max,a);
-              DFS(s+numbers.charAt(i), numbers);
-              checked[i] = false;
+                DFS(i,added, numbers, cnt+1);
             }
         }
+        
+        checked[target] = false;
     }
 }
