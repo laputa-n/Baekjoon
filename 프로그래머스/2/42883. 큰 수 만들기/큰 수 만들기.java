@@ -1,15 +1,18 @@
 class Solution {
     public String solution(String number, int k) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i<number.length(); i++){
-            char c = number.charAt(i);
-            while(k>0 && sb.length() > 0 && sb.charAt(sb.length()-1) <c){
-                sb.deleteCharAt(sb.length()-1);
-                k--;
+        int idx = 0;
+        for(int i = 0; i<number.length()-k; i++){
+            char max = 0;
+            for(int j = idx; j <= i+k; j++){
+                if(number.charAt(j)>max){
+                    max = number.charAt(j);
+                    idx = j+1;
+                }
             }
-            sb.append(c);
+            sb.append(max);
         }
-        if(k>0) sb.setLength(sb.length()-k);
+        
         return sb.toString();
     }
 }
