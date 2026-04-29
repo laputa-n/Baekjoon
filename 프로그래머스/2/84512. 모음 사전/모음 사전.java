@@ -1,16 +1,18 @@
 import java.util.*;
 class Solution {
+    static ArrayList<String> dic = new ArrayList<>();
     public int solution(String word) {
-        String std = "AEIOU";
-        List<String> words = new ArrayList<>();
-        DFS(std,"",words);
-        return words.indexOf(word)+1;
+        String alphabet = "AEIOU";
+        DFS("", alphabet);
+        return dic.indexOf(word)+1;
     }
-    static void DFS(String std,String cur, List<String> words){
-        if(cur.length() == 5) return;
-        for(int i = 0 ; i<5; i++){
-            words.add(cur+std.charAt(i));
-            DFS(std,cur+std.charAt(i),words);
+    
+    static void DFS(String s, String alphabet){
+        if(s.length() == 5) return;
+        for(int i = 0; i<5; i++){
+            String temp = s + alphabet.charAt(i);
+            dic.add(temp);
+            DFS(temp, alphabet);
         }
     }
 }
