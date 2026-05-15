@@ -2,50 +2,34 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] operations) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
         
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        
-        for(String s: operations){
-            String[] operation = s.split(" ");
-            String cmd = operation[0];
-            String number = operation[1];
+        for(String operation: operations){
+            char cmd = operation.charAt(0);
+            int num = Integer.parseInt(operation.split(" ")[1]);
             
-            if(cmd.equals("I")){
-                pq.add(Integer.parseInt(number));
+            if(cmd == 'I'){
+                minHeap.add(num);
+                maxHeap.add(num);
             } else {
-                if(pq.isEmpty()) continue;
+                if(maxHeap.isEmpty()) continue;
                 
-                if(number.equals("1")){
-                    PriorityQueue<Integer> pq2 = new PriorityQueue<>((o1,o2) -> o2 - o1);
-                    
-                    while(!pq.isEmpty()){
-                        pq2.add(pq.poll());
-                    }
-                    
-                    pq2.poll();
-                    
-                    while(!pq2.isEmpty()){
-                        pq.add(pq2.poll());
-                    }
-                    
+                if(num == 1){
+                    int max = maxHeap.poll();
+                    minHeap.remove(Integer.valueOf(max));
                 } else {
-                    pq.poll();
+                    int min = minHeap.poll();
+                    maxHeap.remove(Integer.valueOf(min));
                 }
             }
         }
         
         int[] ans = new int[2];
-        if(pq.isEmpty()){
-            ans[0] = 0;
-            ans[1] = 0;
-        } else {
-            ans[1] = pq.peek();
-            PriorityQueue<Integer> pq2 = new PriorityQueue<>((o1,o2) -> o2-o1);
-            while(!pq.isEmpty()){
-                pq2.add(pq.poll());
-            }
-            ans[0] = pq2.peek();
-        }
+        if(maxHeap.isEmpty()) return ans;
+        
+        ans[0] = maxHeap.poll();
+        ans[1] = minHeap.poll();
         
         return ans;
     }
