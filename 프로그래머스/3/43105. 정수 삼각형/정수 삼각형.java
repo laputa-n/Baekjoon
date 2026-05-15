@@ -1,22 +1,26 @@
 import java.util.*;
 class Solution {
     public int solution(int[][] triangle) {
-        int n = triangle.length;
-        int[][] dp = new int[n][n];
+        int height = triangle.length;
         
-        dp[0][0] = triangle[0][0];
-        for(int i = 1; i<n; i++){
+        for(int i = 1; i<height; i++){
             for(int j = 0; j<=i; j++){
                 if(j == 0){
-                    dp[i][j] = dp[i-1][j] + triangle[i][j]; 
-                } else if(j == i){
-                    dp[i][j] = dp[i-1][j-1] + triangle[i][j];
+                    triangle[i][j] += triangle[i-1][j];
+                } else if(j==i){
+                    triangle[i][j] += triangle[i-1][j-1];
                 } else {
-                    dp[i][j] = triangle[i][j]+Math.max(dp[i-1][j-1], dp[i-1][j]);
+                    triangle[i][j] += Math.max(triangle[i-1][j-1], triangle[i-1][j]);
                 }
+                
             }
         }
         
-        return Arrays.stream(dp[n-1]).max().getAsInt();
+        int max = 0;
+        for(int l: triangle[height-1]){
+            max = Math.max(l,max);
+        }
+        
+        return max;
     }
 }
