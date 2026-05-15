@@ -1,32 +1,51 @@
 import java.util.*;
 class Solution {
-    static int ans = Integer.MAX_VALUE;
-    static boolean[] visited;
+    static int minCnt;
+    static boolean[] checked;
     public int solution(String begin, String target, String[] words) {
-        visited = new boolean[words.length];
-        DFS(begin, target, 0, words);
-        return ans == Integer.MAX_VALUE? 0 : ans;
+        
+        boolean isIn = false;
+        
+        for(String word: words){
+            if(word.equals(target)){
+                isIn = true;
+                break;
+            }
+        }
+        
+        if(!isIn) return 0;
+        
+        minCnt = 51;
+        checked = new boolean[words.length];
+        
+        DFS(begin, target, words, 0);
+        
+        return minCnt == 51? 0: minCnt;
     }
-    static void DFS(String cur, String tar, int cnt, String[] words){
+    
+    static void DFS(String cur, String tar, String[] words, int changed){
         if(cur.equals(tar)){
-            ans = Math.min(ans,cnt);
+            minCnt = Math.min(changed, minCnt);
             return;
         }
-        int size = words.length;
-        for(int i = 0; i<size; i++){
-            if(diff(cur, words[i]) == 1 && !visited[i]){
-                visited[i] = true;
-                DFS(words[i], tar, cnt+1, words);
-                visited[i] = false;
+        
+        
+        for(int i = 0; i<words.length; i++){
+            if(calDiff(cur, words[i]) == 1 && !checked[i]){
+                checked[i] = true;
+                DFS(words[i], tar, words, changed+1);
+                checked[i] = false;
             }
         }
     }
-    static int diff(String a, String b){
-        int size = a.length();
+    
+    static int calDiff(String a, String b){
         int cnt = 0;
-        for(int i = 0; i<size; i++){
-            if(a.charAt(i) != b.charAt(i)) cnt++;
+        
+        for(int i = 0; i<a.length(); i++){
+            if(a.charAt(i) != b.charAt(i)) cnt ++;
         }
+        
         return cnt;
     }
 }
