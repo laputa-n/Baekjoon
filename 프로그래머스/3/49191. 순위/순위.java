@@ -2,68 +2,50 @@ import java.util.*;
 
 class Solution {
     public int solution(int n, int[][] results) {
+        int[][] matrix = new int[n+1][n+1];
         
-        ArrayList<Integer> [] prevList = new ArrayList[n+1];
-        ArrayList<Integer> [] nextList = new ArrayList[n+1];
-        for(int i = 1; i<=n; i++){
-            prevList[i] = new ArrayList<>();
-            nextList[i] = new ArrayList<>();
+        for(int[] result: results){
+            int win = result[0];
+            int lose = result[1];
+            
+            matrix[win][lose] = 1;
+            matrix[lose][win] = -1;
         }
         
-        for(int[] r: results){
-            int win = r[0];
-            int lose = r[1];
-            
-            nextList[win].add(lose);
-            prevList[lose].add(win);
+        for(int k = 1; k<=n; k++){
+            for(int i = 1; i<=n; i++){
+                for(int j = 1; j<=n; j++){
+                    if(matrix[i][k] == 1 && matrix[k][j] == 1){
+                        matrix[i][j] = 1;
+                        matrix[j][i] = -1;
+                    }
+                    
+                    //i가 k한테 질때
+                    if(matrix[i][k] == -1 && matrix[k][j] == -1){
+                        matrix[i][j] = -1;
+                        matrix[j][i] = 1;
+                    }
+                }
+            }
         }
         
         int cnt = 0;
-        
         for(int i = 1; i<=n; i++){
-            boolean[] checked = new boolean[n+1];
-            Queue<Integer> q = new LinkedList<>();
-            int prevCnt = prevList[i].size();
+            boolean canCal = true;
             
-            for(int p: prevList[i]){
-                q.add(p);
-                checked[p] = true;
-            }
-            
-            while(!q.isEmpty()){
-                int prevNum = q.poll();
-                for(int pp: prevList[prevNum]){
-                    if(!checked[pp]){
-                        q.add(pp);
-                        prevCnt++;
-                        checked[pp] = true;
-                    }
+            for(int j = 1; j<=n; j++){
+                if(i == j) continue;
+                
+                if(matrix[i][j] == 0){
+                    canCal = false;
+                    break;
                 }
             }
             
-            checked = new boolean[n+1];
-            q = new LinkedList<>();
-            int nextCnt = nextList[i].size();
-            
-            for(int nn: nextList[i]){
-                q.add(nn);
-                checked[nn] = true;
-            }
-            
-            while(!q.isEmpty()){
-                int nextNum = q.poll();
-                for(int nn: nextList[nextNum]){
-                    if(!checked[nn]){
-                        q.add(nn);
-                        nextCnt++;
-                        checked[nn] = true;
-                    }
-                }
-            }
-            
-            if(prevCnt + nextCnt == n-1) cnt++;
+            if(canCal) cnt++;
         }
         
         return cnt;
     }
+        
 }
