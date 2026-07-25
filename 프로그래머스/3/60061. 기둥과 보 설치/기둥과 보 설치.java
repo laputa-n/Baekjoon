@@ -1,94 +1,147 @@
 import java.util.*;
 
 class Solution {
+    static List<Character>[][] matrix;
     static int len;
-    static boolean[][] pillar;
-    static boolean[][] beam;
     public int[][] solution(int n, int[][] build_frame) {
-        //0: x의 좌표
-        //1: y의 좌표
-        //2: 구조물 종류(0 - 기둥 / 1 - 보)
-        //3: 설치 or 삭제(0 - 삭제 / 1 - 설치)
+        // 기둥 1) 바닥 위 2) 보의 한쪽 끝 부분 위 3) 다른 기둥 위
+        // 보 1) 한쪽 끝 부분이 기둥 위 2) 양쪽 끝 부분이 다른 보와 연결
+        matrix = new ArrayList[n+1][n+1];
+        for(int i = 0; i<=n; i++){
+            for(int j = 0; j<=n; j++){
+                matrix[i][j] = new ArrayList<>();
+            }
+        }
         len = n;
-        pillar = new boolean[n+1][n+1];
-        beam = new boolean[n+1][n+1];
         
-        for(int[] cmd: build_frame){
-            int x = cmd[0];
-            int y = cmd[1];
-            int type = cmd[2];
-            int cmdType = cmd[3];
+        for(int[] task: build_frame){
+            int x = task[0];
+            int y = task[1];
+            int a = task[2]; //0: 기둥 I Post / 1: 보 - Pillar
+            int b = task[3]; //0: 삭제 / 1: 설치
             
-            //설치
-            if(cmdType == 1){
-                if(canInstall(x,y,type)) install(x,y,type);
-            //삭제
-            } else {
-                uninstall(x,y,type);
-                if(!isValidStructure()) install(x,y,type);
+            int[] rc = xyTorc(new int[]{x,y}, n);
+            int row = rc[0];
+            int col = rc[1];
+            
+            //기둥
+            if(a == 0){
+                //설치
+                if(b == 1){
+                    if(canBuildPostAtThis(row, col)){
+                        matrix[row][col].add('G');
+                    }
+                }
+                //삭제
+                else {
+                    if(canDeletePostAtThis(row, col)){
+                        matrix[row][col].remove(Character.valueOf('G'));
+                    }
+                }
+            }
+            //보
+            else {
+                //설치
+                if(b == 1){
+                    if(canBuildPillarAtThis(row, col)){
+                        matrix[row][col].add('B');
+                    }
+                } 
+                //삭제
+                else {
+                    if(canDeletePillarAtThis(row, col)){
+                        matrix[row][col].remove(Character.valueOf('B'));
+                    }
+                }
             }
         }
         
-        List<int[]> answerList = new ArrayList<>();
-        for(int i = 0; i<= len; i++){
-            for(int j = 0; j<=len; j++){
-                if(pillar[i][j]) answerList.add(new int[]{i,j,0});
-                if(beam[i][j]) answerList.add(new int[]{i,j,1});
+        
+        List<int[]> result = new ArrayList<>();
+        
+        for(int i = 0; i<=n; i++){
+            for(int j = n; j>=0; j--){
+                if(matrix[i][j].contains('G')){
+                    int[] xy = rcToxy(new int[]{i,j}, n);
+                    result.add(new int[]{xy[0], xy[1], 0});
+                }
+                
+                if(matrix[i][j].contains('B')){
+                    int[] xy = rcToxy(new int[]{i,j}, n);
+                    result.add(new int[]{xy[0], xy[1], 1});
+                }
             }
         }
         
-        answerList.sort((i1,i2) -> {
-            if(i1[0] == i2[0] && i1[1] == i2[1]) return i1[2] - i2[2];
-            if(i1[0] == i2[0]) return i1[1] - i2[1];
-            return i1[0] - i2[0];
+        int[][] answer = new int[result.size()][3];
+        for(int i = 0; i<result.size(); i++){
+            answer[i]  = result.get(i);
+        }
+
+        Arrays.sort(answer, (p1, p2) -> {
+            if(p1[0] != p2[0]) return p1[0] - p2[0];      // x 오름차순
+            if(p1[1] != p2[1]) return p1[1] - p2[1];      // y 오름차순
+            return p1[2] - p2[2];                          // 기둥(0)이 보(1)보다 먼저
         });
-        
-        return answerList.toArray(new int[answerList.size()][3]);
+
+        return answer;
     }
-    static boolean isValidStructure(){
-        for(int i = 0; i<=len; i++){
-            for(int j = 0; j<=len; j++){
-                if(pillar[i][j] && !canInstall(i,j,0)) return false;
-                if(beam[i][j] && !canInstall(i,j,1)) return false;
-            }
-        }
-        
-        return true;
-    }
-    static boolean canInstall(int x, int y, int type){
-        //기둥
-        if(type == 0){
-            if(y == 0) return true;
-            if(hasPillar(x, y-1)) return  true;
-            if(hasBeam(x-1, y) || hasBeam(x, y)) return true;
-        //보
-        } else {
-            if (hasPillar(x, y - 1) || hasPillar(x + 1, y - 1)) return true;
-            if (hasBeam(x - 1, y) && hasBeam(x + 1, y)) return true;
-        }
-        return false;
-    }
-    static void uninstall(int x, int y, int type){
-        if(type == 0){
-            pillar[x][y] = false;
-        } else {
-            beam[x][y] = false;
-        }
-    }
-    static void install(int x, int y, int type){
-        if(type == 0){
-            pillar[x][y] = true;
-        } else {
-            beam[x][y] = true;
-        }
-    }
-    static boolean hasPillar(int x, int y) {
-    if (x < 0 || x > len || y < 0 || y > len) return false;
-    return pillar[x][y];
+    // 기둥 1) 바닥 위 2) 보의 한쪽 끝 부분 위 3) 다른 기둥 위
+    // 보 1) 한쪽 끝 부분이 기둥 위 2) 양쪽 끝 부분이 다른 보와 연결
+    private boolean canBuildPostAtThis(int r, int c){
+    if(r == len) return true;
+    if(matrix[r+1][c].contains('G')) return true;
+    if(matrix[r][c].contains('B') || (c > 0 && matrix[r][c-1].contains('B'))) return true;
+    return false;
 }
 
-static boolean hasBeam(int x, int y) {
-    if (x < 0 || x > len || y < 0 || y > len) return false;
-    return beam[x][y];
+private boolean canBuildPillarAtThis(int r, int c){
+    if(matrix[r+1][c].contains('G') || matrix[r+1][c+1].contains('G')) return true;
+    if(c > 0 && c < len && matrix[r][c-1].contains('B') && matrix[r][c+1].contains('B')) return true;
+    return false;
+}
+    
+    private boolean canDeletePostAtThis(int r, int c){
+        matrix[r][c].remove(Character.valueOf('G'));
+        boolean ok = isStructureValid();
+        matrix[r][c].add('G');
+        return ok;
+    }
+
+    private boolean canDeletePillarAtThis(int r, int c){
+        matrix[r][c].remove(Character.valueOf('B'));
+        boolean ok = isStructureValid();
+        matrix[r][c].add('B');
+        return ok;
+    }
+    
+    private int[] xyTorc (int[] xy, int n){
+        int x = xy[0];
+        int y = xy[1];
+        
+        int col = x;
+        int row = n - y;
+        
+        return new int[]{row, col};
+    }
+    
+    private int[] rcToxy(int[] rc, int n){
+        int row = rc[0];
+        int col = rc[1];
+        
+        int x = col;
+        int y = n - row;
+        
+        return new int[]{x,y};
+    }
+    
+    private boolean isStructureValid(){
+    for(int r = 0; r <= len; r++){
+        for(int c = 0; c <= len; c++){
+            if(matrix[r][c].contains('G') && !canBuildPostAtThis(r, c)) return false;
+            if(matrix[r][c].contains('B') && !canBuildPillarAtThis(r, c)) return false;
+        }
+    }
+    return true;
 }
 }
